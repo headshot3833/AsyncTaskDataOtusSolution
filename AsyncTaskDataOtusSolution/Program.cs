@@ -12,11 +12,12 @@ internal class Program
 
         var files = Directory.GetFiles(directoryPath);
         Stopwatch stopwatch = Stopwatch.StartNew();
-        var tasks = files.Select(async file =>
+        var tasks = files.Select(file => Task.Run(async () =>
         {
             int spaceCount = await userReadFile.ReadFileAsync(file);
             return (file, spaceCount);
-        });
+        }));
+
         var results = await Task.WhenAll(tasks);
         stopwatch.Stop();
         foreach (var result in results)
